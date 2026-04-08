@@ -2,68 +2,95 @@
 
 ## Objetivo
 
-El objetivo de este proyecto es realizar un Análisis Exploratorio de Datos (EDA) sobre el dataset del Titanic para identificar los factores más relevantes asociados a la supervivencia de los pasajeros.
+El objetivo de este proyecto es analizar los factores asociados a la supervivencia de los pasajeros del Titanic mediante Análisis Exploratorio de Datos (EDA) y la construcción de modelos predictivos.
 
 ---
 
 ## Dataset
 
-El dataset contiene información sobre los pasajeros del Titanic.
+El dataset contiene información sobre los pasajeros del Titanic, incluyendo variables demográficas, socioeconómicas y relacionadas con el viaje.
 
-Los datos se cargan directamente desde un repositorio público de GitHub para garantizar la reproducibilidad del análisis.
+Los datos se cargan desde un repositorio público para garantizar la reproducibilidad del análisis.
 
 ---
 
 ## Análisis realizado
 
-El análisis incluye:
+El proyecto se desarrolló en tres etapas principales:
+
+### 1. Análisis Exploratorio de Datos (EDA)
 
 * Limpieza y preparación de datos
 * Análisis univariado
-* Análisis bivariado en relación con la variable objetivo (`Survived`)
-* Identificación de variables relevantes
-* Ingeniería de variables
----
+* Análisis bivariado respecto a la variable objetivo (`Survived`)
+* Identificación de patrones y generación de hipótesis
 
-## Principales hallazgos
+### 2. Ingeniería de variables
 
-* **Sexo** es una de las variables más influyentes, con una tasa de supervivencia significativamente mayor en mujeres.
-* **Clase (Pclass)** muestra una relación clara con la supervivencia, reflejando el impacto del nivel socioeconómico.
-* **Tarifa (Fare)** aporta mayor detalle que la clase, ya que captura variaciones dentro de cada categoría y sugiere la existencia de subgrupos.
-* **Tamaño de familia** (combinación de `SibSp` y `Parch`) presenta una relación no lineal: familias pequeñas tienen mayor probabilidad de sobrevivir, mientras que pasajeros solos o en grupos grandes tienen menor probabilidad.
-* **Edad (Age)** no presenta diferencias significativas en la tasa de supervivencia entre grupos.
-
----
-
-## Ingeniería de variables
-
-Se creó una nueva variable para representar mejor la estructura familiar:
+Se crearon nuevas variables para capturar mejor la estructura de los datos:
 
 ```python
 df["FamilySize"] = df["SibSp"] + df["Parch"] 
 ```
 
-Esta variable permite capturar patrones relacionados con el tamaño del grupo del pasajero.
+Esta variable permitió modelar la dinámica familiar de los pasajeros.
+
+---
+
+### 3. Modelado y evaluación
+
+Se entrenaron modelos de clasificación utilizando diferentes combinaciones de variables, evaluando su desempeño mediante **F1-score**.
+
+Se implementó un enfoque modular para:
+
+* Entrenamiento del modelo
+* Evaluación
+* Comparación de subconjuntos de variables
+
+Además, se analizó la importancia de variables mediante métodos basados en modelos.
+
+---
+
+## Principales hallazgos
+
+* **Sexo (`Sex`)** es la variable más influyente, con mayor tasa de supervivencia en mujeres.
+* **Clase (`Pclass`)** presenta una relación clara con la supervivencia, reflejando diferencias socioeconómicas.
+* **Tarifa (`Fare`)** aporta información más granular que la clase, capturando variaciones dentro de cada categoría.
+* **Tamaño de familia (`FamilySize`)** muestra una relación no lineal: familias pequeñas tienen mayor probabilidad de sobrevivir.
+* **Edad (`Age`)** no presenta diferencias claras en el EDA, pero aporta valor en combinación con otras variables dentro del modelo.
+* **Puerto de embarque (`Embarked`)** tiene una contribución marginal, pero mejora ligeramente el desempeño del modelo al combinarse con otras variables.
+
+---
+
+## Resultados del modelo
+
+Se evaluaron múltiples combinaciones de variables utilizando Random Forest:
+
+* Mejor modelo: **F1-score ≈ 0.73**
+* Variables utilizadas: combinación de sex, fare y age
 
 ---
 
 ## Notas metodológicas
 
-* Se utilizaron proporciones y visualizaciones en lugar de correlación de Pearson para variables categóricas y relaciones no lineales.
-* El objetivo del EDA es explorar los datos y generar hipótesis, no validar relaciones causales.
+* El EDA se utilizó para generar hipótesis, no para eliminar variables de forma definitiva.
+* La selección de variables se validó mediante desempeño del modelo.
+* Se utilizó **F1-score** como métrica principal para balancear precision y recall.
+* La importancia de variables se interpretó como contribución al modelo, no como causalidad.
 
 ---
 
 ## Conclusión
 
-La supervivencia en el Titanic estuvo influenciada por una combinación de factores sociales, económicos y estructurales. Variables como el sexo, la tarifa y la clase tienen un impacto significativo, mientras que otras aportan información complementaria o indirecta.
+El modelado confirma que variables como el sexo, la tarifa y la edad son determinantes clave, mientras que otras variables aportan valor adicional en combinación, aunque no sean evidentes en el análisis exploratorio.
 
 ---
 
 ## Trabajo futuro
 
-* Construcción de modelos predictivos (Regresión Logística, Random Forest, etc.)
-* Evaluación de importancia de variables
-* Mejora en la ingeniería de características
+* Optimización de hiperparámetros
+* Ajuste del threshold de decisión
+* Implementación de pipelines de procesamiento
+* Despliegue del modelo mediante API (ej. con FastAPI)
+* Comparación con otros modelos (Logistic Regression, Gradient Boosting)
 
----
